@@ -22,6 +22,7 @@ SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
 VAPID_PUBLIC_KEY = os.getenv("VAPID_PUBLIC_KEY")
 VAPID_PRIVATE_KEY = os.getenv("VAPID_PRIVATE_KEY")
 VAPID_SUBJECT = os.getenv("VAPID_SUBJECT", "mailto:admin@example.com")
+APP_BASE_URL = os.getenv("APP_BASE_URL", "https://clothshop-sable.vercel.app").rstrip("/")
 
 if not SUPABASE_URL or not SUPABASE_ANON_KEY:
     raise RuntimeError(
@@ -492,7 +493,7 @@ def feedback():
             {
                 "title": "B20X - New Feedback",
                 "body": f"{name} ({email}): {feedback_text}",
-                "url": "http://127.0.0.1:5000/admin/",
+                "url": f"{APP_BASE_URL}/admin/",
             }
         )
         session["fb_success"] = "Thank you for your feedback!"
@@ -819,7 +820,7 @@ def info():
                         {
                             "title": title_text,
                             "body": body_text,
-                            "url": "http://127.0.0.1:5000/info/",
+                            "url": f"{APP_BASE_URL}/info/",
                         }
                     )
                 else:
