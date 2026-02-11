@@ -1,0 +1,6 @@
+flask
+supabase
+python-dotenv
+pywebpush
+py-vapid
+werkzeug
