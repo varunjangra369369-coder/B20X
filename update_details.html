@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B20X | Update User Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1e2a3a;
+      --ink-soft: #5b6b7d;
+      --gold: #ca935b;
+      --gold-deep: #915b32;
+      --card: rgba(255, 255, 255, 0.86);
+      --line: rgba(30, 42, 58, 0.14);
+      --ok: #1d7f4d;
+      --ok-bg: #e7f6ef;
+      --danger: #c14a34;
+      --danger-bg: #fce8e4;
+      --radius-xl: 22px;
+      --radius-lg: 14px;
+      --shadow-xl: 0 20px 50px rgba(30, 42, 58, 0.2);
+      --hero-bg: url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2200&q=80");
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Outfit', sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(160deg, rgba(246, 238, 226, 0.84), rgba(225, 212, 194, 0.74)),
+        radial-gradient(circle at 12% 10%, rgba(202, 147, 91, 0.2), rgba(202, 147, 91, 0) 38%),
+        radial-gradient(circle at 86% 84%, rgba(30, 42, 58, 0.2), rgba(30, 42, 58, 0) 42%),
+        var(--hero-bg) center / cover fixed no-repeat;
+      padding: 1.2rem;
+    }
+
+    .page { max-width: 1260px; margin: 0 auto; display: grid; gap: 1rem; }
+
+    .hero, .table-panel, .notes {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero { padding: 1.4rem 1.2rem; }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 0.95;
+      margin-bottom: 0.35rem;
+    }
+
+    .subtitle {
+      color: var(--ink-soft);
+      margin-bottom: 0.95rem;
+      line-height: 1.7;
+      max-width: 68ch;
+    }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+
+    .actions a {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 0.52rem 0.78rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(30,42,58,0.14);
+      color: var(--ink);
+      transition: transform 200ms ease, border-color 200ms ease;
+    }
+
+    .actions a:hover { transform: translateY(-2px); border-color: rgba(202,147,91,0.55); }
+    .actions .logout { color: #b24734; }
+
+    .message, .error {
+      margin-top: 0.9rem;
+      border-radius: 10px;
+      padding: 0.68rem 0.78rem;
+      font-size: 0.92rem;
+      border-left: 4px solid;
+    }
+
+    .message {
+      color: var(--ok);
+      background: var(--ok-bg);
+      border-color: var(--ok);
+    }
+
+    .error {
+      color: var(--danger);
+      background: var(--danger-bg);
+      border-color: var(--danger);
+    }
+
+    .table-panel { padding: 1rem; overflow: hidden; }
+
+    .table-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+
+    .table-head h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+    }
+
+    .count {
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      border: 1px solid rgba(30,42,58,0.14);
+      border-radius: 999px;
+      padding: 0.4rem 0.7rem;
+      background: rgba(255,255,255,0.74);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid rgba(30,42,58,0.1);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.84);
+    }
+
+    table { width: 100%; border-collapse: collapse; min-width: 980px; }
+
+    thead th {
+      text-align: left;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      padding: 0.75rem;
+      background: rgba(248,244,238,0.95);
+      border-bottom: 1px solid rgba(30,42,58,0.12);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody td {
+      padding: 0.72rem;
+      border-bottom: 1px solid rgba(30,42,58,0.08);
+      vertical-align: top;
+      font-size: 0.92rem;
+    }
+
+    tbody tr:hover { background: rgba(202,147,91,0.06); }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      border: 1px solid rgba(30,42,58,0.18);
+      border-radius: 10px;
+      padding: 0.54rem 0.62rem;
+      font: inherit;
+      color: var(--ink);
+      background: rgba(255,255,255,0.9);
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(202,147,91,0.16);
+    }
+
+    button {
+      border: 1px solid rgba(30,42,58,0.14);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.84);
+      color: var(--ink);
+      padding: 0.44rem 0.72rem;
+      font: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: rgba(202,147,91,0.52); }
+
+    .btn-update {
+      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+      color: #fff;
+      border: none;
+    }
+
+    .btn-delete {
+      color: #b24734;
+      border-color: rgba(178,71,52,0.35);
+      background: rgba(252,232,228,0.7);
+    }
+
+    .admin-pill {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 0.32rem 0.56rem;
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(30,42,58,0.16);
+    }
+
+    .notes { padding: 1rem; }
+
+    .notes h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .notes ul {
+      padding-left: 1.1rem;
+      color: var(--ink-soft);
+      display: grid;
+      gap: 0.3rem;
+      line-height: 1.62;
+    }
+
+    @media (max-width: 900px) {
+      body { background-attachment: scroll; }
+      .hero, .table-panel, .notes { border-radius: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>Update User Details</h1>
+      <p class="subtitle">Edit user name, email, role, and password. Role and password changes can force user session refresh.</p>
+
+      <div class="actions">
+        <a href="/admin/">Admin</a>
+        <a href="/update_details/">Update Users</a>
+        <a href="/users_details/">Users List</a>
+        <a href="/info/">Manage Info</a>
+        <a href="/feedbacks/">View Feedback</a>
+        <a class="logout" href="/logout/">Logout</a>
+      </div>
+
+      {% if message %}
+        <p class="message">{{ message }}</p>
+      {% endif %}
+      {% if error %}
+        <p class="error">{{ error }}</p>
+      {% endif %}
+    </section>
+
+    <section class="table-panel">
+      <div class="table-head">
+        <h2>User Controls</h2>
+        <div class="count">Total: {{ users|length }}</div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Password</th>
+              <th>Action</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+              <tr>
+                <td>
+                  <form method="POST" id="update-form-{{ user.id }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                    <input type="hidden" name="user_id" value="{{ user.id }}" />
+                    <input type="text" name="name" value="{{ user.name }}" required />
+                </td>
+                <td>
+                    <input type="email" name="email" value="{{ user.email }}" required />
+                </td>
+                <td>
+                    <input type="text" name="role" value="{{ user.role }}" required />
+                </td>
+                <td>
+                    <input type="password" name="password" placeholder="Leave blank to keep" />
+                </td>
+                <td>
+                    <input type="hidden" name="action" value="update" />
+                    <button class="btn-update" type="submit">Update</button>
+                  </form>
+                </td>
+                <td>
+                  {% if user.role != "admin" %}
+                    <form method="POST">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                      <input type="hidden" name="user_id" value="{{ user.id }}" />
+                      <input type="hidden" name="action" value="delete" />
+                      <button class="btn-delete" type="submit">Delete</button>
+                    </form>
+                  {% else %}
+                    <span class="admin-pill">Admin</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="notes">
+      <h3>Important Notes</h3>
+      <ul>
+        <li>Leave password blank to keep existing password.</li>
+        <li>Ensure email is unique for each user.</li>
+        <li>Only admins can update user details.</li>
+        <li>Grant admin role only to trusted partners.</li>
+        <li>Do not share admin credentials.</li>
+        <li>To block a user quickly, change their password.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

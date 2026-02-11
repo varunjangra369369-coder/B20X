@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>B20X | Users Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1e2a3a;
+            --ink-soft: #5b6b7d;
+            --gold: #ca935b;
+            --gold-deep: #915b32;
+            --line: rgba(30, 42, 58, 0.14);
+            --card: rgba(255, 255, 255, 0.84);
+            --white: #ffffff;
+            --danger: #c14a34;
+            --danger-bg: #fce8e4;
+            --radius-xl: 24px;
+            --radius-lg: 14px;
+            --shadow-xl: 0 22px 55px rgba(30, 42, 58, 0.2);
+            --hero-bg: url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2200&q=80");
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+            color: var(--ink);
+            background:
+                linear-gradient(160deg, rgba(246, 238, 226, 0.84), rgba(225, 212, 194, 0.75)),
+                radial-gradient(circle at 12% 10%, rgba(202, 147, 91, 0.2), rgba(202, 147, 91, 0) 38%),
+                radial-gradient(circle at 86% 84%, rgba(30, 42, 58, 0.2), rgba(30, 42, 58, 0) 42%),
+                var(--hero-bg) center / cover fixed no-repeat;
+            padding: 1.2rem;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .hero,
+        .table-panel {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            backdrop-filter: blur(8px);
+        }
+
+        .hero {
+            padding: 1.5rem 1.2rem;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4.2vw, 2.9rem);
+            line-height: 0.95;
+            margin-bottom: 0.35rem;
+        }
+
+        .subtitle {
+            color: var(--ink-soft);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            max-width: 65ch;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        .actions a {
+            text-decoration: none;
+            border-radius: 999px;
+            padding: 0.55rem 0.8rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(30, 42, 58, 0.14);
+            color: var(--ink);
+            transition: transform 200ms ease, border-color 200ms ease;
+        }
+
+        .actions a:hover {
+            transform: translateY(-2px);
+            border-color: rgba(202, 147, 91, 0.55);
+        }
+
+        .actions .logout {
+            color: #b24734;
+        }
+
+        .error-msg {
+            margin-top: 1rem;
+            color: var(--danger);
+            background: var(--danger-bg);
+            border: 1px solid rgba(193, 74, 52, 0.2);
+            border-left: 4px solid var(--danger);
+            border-radius: 10px;
+            padding: 0.7rem 0.8rem;
+            font-size: 0.92rem;
+        }
+
+        .table-panel {
+            padding: 1rem;
+            overflow: hidden;
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            align-items: center;
+            margin-bottom: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .panel-head h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+        }
+
+        .users-count {
+            color: var(--ink-soft);
+            font-size: 0.92rem;
+            border: 1px solid rgba(30, 42, 58, 0.14);
+            border-radius: 999px;
+            padding: 0.42rem 0.7rem;
+            background: rgba(255, 255, 255, 0.74);
+        }
+
+        .search-box {
+            width: min(320px, 100%);
+            border: 1px solid rgba(30, 42, 58, 0.18);
+            background: rgba(255, 255, 255, 0.86);
+            border-radius: 12px;
+            padding: 0.62rem 0.75rem;
+            font: inherit;
+            color: var(--ink);
+            outline: none;
+        }
+
+        .search-box:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(202, 147, 91, 0.16);
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid rgba(30, 42, 58, 0.1);
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.84);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 820px;
+        }
+
+        thead th {
+            text-align: left;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            padding: 0.8rem;
+            background: rgba(248, 244, 238, 0.95);
+            border-bottom: 1px solid rgba(30, 42, 58, 0.12);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        tbody td {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(30, 42, 58, 0.08);
+            vertical-align: top;
+            font-size: 0.94rem;
+        }
+
+        tbody tr:hover {
+            background: rgba(202, 147, 91, 0.07);
+        }
+
+        .role-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.28rem 0.56rem;
+            border-radius: 999px;
+            font-size: 0.77rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            border: 1px solid rgba(30, 42, 58, 0.16);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--ink-soft);
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--ink-soft);
+            padding: 1.3rem;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                background-attachment: scroll;
+            }
+
+            .hero,
+            .table-panel {
+                border-radius: 18px;
+            }
+
+            table {
+                min-width: 680px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <section class="hero">
+            <h1>Users Directory</h1>
+            <p class="subtitle">View all registered users with role and account details. Use quick links below to jump to admin actions.</p>
+
+            <div class="actions">
+                <a href="/admin/">Admin</a>
+                <a href="/update_details/">Update Users</a>
+                <a href="/users_details/">Users List</a>
+                <a href="/info/">Manage Info</a>
+                <a href="/feedbacks/">View Feedback</a>
+                <a class="logout" href="/logout/">Logout</a>
+            </div>
+
+            {% if error %}
+                <p class="error-msg">{{ error }}</p>
+            {% endif %}
+        </section>
+
+        <section class="table-panel">
+            <div class="panel-head">
+                <h2>All Users</h2>
+                <div class="users-count">Total: {{ users|length }}</div>
+            </div>
+
+            <input id="userSearch" class="search-box" type="text" placeholder="Search by name, email or role">
+
+            <div class="table-wrap" style="margin-top: 0.85rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td><span class="role-pill">{{ user.role }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if not users %}
+                    <div class="empty">No users found.</div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById("userSearch");
+        const tableBody = document.getElementById("usersTableBody");
+
+        searchInput.addEventListener("input", () => {
+            const query = searchInput.value.trim().toLowerCase();
+            const rows = tableBody.querySelectorAll("tr");
+
+            rows.forEach((row) => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? "" : "none";
+            });
+        });
+    </script>
+</body>
+</html>

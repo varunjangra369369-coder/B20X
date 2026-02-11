@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B20X | User Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1e2a3a;
+      --ink-soft: #5b6b7d;
+      --gold: #ca935b;
+      --gold-deep: #915b32;
+      --card: rgba(255, 255, 255, 0.86);
+      --line: rgba(30, 42, 58, 0.14);
+      --ok: #1d7f4d;
+      --ok-bg: #e7f6ef;
+      --danger: #c14a34;
+      --danger-bg: #fce8e4;
+      --radius-xl: 22px;
+      --radius-lg: 14px;
+      --shadow-xl: 0 20px 50px rgba(30, 42, 58, 0.2);
+      --hero-bg: url("https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=2200&q=80");
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Outfit', sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(160deg, rgba(246, 238, 226, 0.84), rgba(225, 212, 194, 0.74)),
+        radial-gradient(circle at 14% 12%, rgba(202, 147, 91, 0.22), rgba(202, 147, 91, 0) 40%),
+        radial-gradient(circle at 84% 86%, rgba(30, 42, 58, 0.2), rgba(30, 42, 58, 0) 42%),
+        var(--hero-bg) center / cover fixed no-repeat;
+      padding: 1.2rem;
+      overflow-x: hidden;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .hero,
+    .feedback-panel,
+    .quick-panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero {
+      padding: 1.4rem 1.2rem;
+      display: grid;
+      gap: 0.95rem;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4.2vw, 3rem);
+      line-height: 0.95;
+    }
+
+    .subtitle {
+      color: var(--ink-soft);
+      line-height: 1.72;
+      max-width: 72ch;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 0.52rem 0.8rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(30,42,58,0.14);
+      color: var(--ink);
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .nav-links a:hover {
+      transform: translateY(-2px);
+      border-color: rgba(202,147,91,0.55);
+    }
+
+    .nav-links .logout { color: #b24734; }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    #enable-push {
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+      color: #fff;
+      padding: 0.58rem 0.9rem;
+      font: inherit;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(145, 91, 50, 0.32);
+      transition: transform 180ms ease;
+    }
+
+    #enable-push:hover { transform: translateY(-1px); }
+
+    .push-note {
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 1rem;
+    }
+
+    .feedback-panel,
+    .quick-panel {
+      padding: 1rem;
+    }
+
+    .feedback-panel h2,
+    .quick-panel h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .feedback-panel p,
+    .quick-panel p {
+      color: var(--ink-soft);
+      line-height: 1.65;
+      margin-bottom: 0.85rem;
+    }
+
+    .message,
+    .error {
+      border-radius: 10px;
+      padding: 0.68rem 0.78rem;
+      font-size: 0.92rem;
+      border-left: 4px solid;
+      margin-bottom: 0.85rem;
+    }
+
+    .message {
+      color: var(--ok);
+      background: var(--ok-bg);
+      border-color: var(--ok);
+    }
+
+    .error {
+      color: var(--danger);
+      background: var(--danger-bg);
+      border-color: var(--danger);
+    }
+
+    form {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    label {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(30,42,58,0.18);
+      border-radius: 12px;
+      padding: 0.62rem 0.72rem;
+      font: inherit;
+      color: var(--ink);
+      background: rgba(255,255,255,0.9);
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    textarea { min-height: 130px; resize: vertical; }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(202,147,91,0.16);
+    }
+
+    .submit-btn {
+      margin-top: 0.2rem;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+      color: #fff;
+      padding: 0.64rem 0.95rem;
+      font: inherit;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      width: fit-content;
+      box-shadow: 0 10px 22px rgba(145, 91, 50, 0.32);
+      transition: transform 180ms ease;
+    }
+
+    .submit-btn:hover { transform: translateY(-1px); }
+
+    .quick-list {
+      display: grid;
+      gap: 0.55rem;
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0.2rem;
+    }
+
+    .quick-list li {
+      border: 1px solid rgba(30,42,58,0.14);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.75);
+      padding: 0.65rem 0.72rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .quick-list strong { color: var(--ink); }
+
+    .quick-cta {
+      margin-top: 0.8rem;
+      display: inline-flex;
+      text-decoration: none;
+      border-radius: 999px;
+      border: 1px solid rgba(30,42,58,0.14);
+      background: rgba(255,255,255,0.84);
+      color: var(--ink);
+      padding: 0.52rem 0.78rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .quick-cta:hover {
+      transform: translateY(-2px);
+      border-color: rgba(202,147,91,0.55);
+    }
+
+    @media (max-width: 950px) {
+      body { background-attachment: scroll; }
+      .grid { grid-template-columns: 1fr; }
+      .hero, .feedback-panel, .quick-panel { border-radius: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>Welcome to B20X User Space</h1>
+      <p class="subtitle">Explore updates, share your feedback, and stay connected with notifications. This interface is designed for regular users with a clear path to Info and account actions.</p>
+
+      <div class="nav-links">
+        <a href="/user/">User Home</a>
+        <a href="/info/">Info</a>
+        <a class="logout" href="/logout/">Logout</a>
+      </div>
+
+      <div class="hero-actions">
+        <button id="enable-push" type="button">Enable Notifications</button>
+        <span class="push-note">Get alerts for new updates and activity.</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="feedback-panel">
+        <h2>Share Feedback</h2>
+        <p>Your feedback helps us improve the B20X experience for everyone.</p>
+
+        {% if fb_success %}
+          <p class="message">{{ fb_success }}</p>
+        {% endif %}
+        {% if fb_error %}
+          <p class="error">{{ fb_error }}</p>
+        {% endif %}
+
+        <form method="POST" action="/feedback/">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <input type="hidden" name="fb_token" value="{{ fb_token }}" />
+
+          <label for="fb_name">Name</label>
+          <input type="text" id="fb_name" name="fb_name" required />
+
+          <label for="fb_email">Email</label>
+          <input type="email" id="fb_email" name="fb_email" required />
+
+          <label for="fb_feedback">Feedback</label>
+          <textarea id="fb_feedback" name="fb_feedback" required></textarea>
+
+          <button class="submit-btn" type="submit">Submit Feedback</button>
+        </form>
+      </article>
+
+      <aside class="quick-panel">
+        <h2>Quick Guide</h2>
+        <p>Everything you need as a regular user:</p>
+
+        <ul class="quick-list">
+          <li><strong>Info Page:</strong> View latest published updates and content.</li>
+          <li><strong>Feedback:</strong> Share your suggestions or issues any time.</li>
+          <li><strong>Notifications:</strong> Turn on alerts to stay updated instantly.</li>
+        </ul>
+
+        <a class="quick-cta" href="/info/">Open Info Page</a>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    async function urlBase64ToUint8Array(base64String) {
+      const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+
+    async function registerPush() {
+      const button = document.getElementById("enable-push");
+
+      try {
+        if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+          alert("Push notifications not supported in this browser.");
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Enabling...";
+
+        const swReg = await navigator.serviceWorker.register("/sw.js");
+        const res = await fetch("/push/vapid_public_key");
+        const data = await res.json();
+        const publicKey = data.publicKey;
+
+        const subscription = await swReg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: await urlBase64ToUint8Array(publicKey),
+        });
+
+        await fetch("/push/subscribe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": "{{ csrf_token }}"
+          },
+          body: JSON.stringify(subscription),
+        });
+
+        button.textContent = "Notifications Enabled";
+        alert("Notifications enabled.");
+      } catch (error) {
+        button.disabled = false;
+        button.textContent = "Enable Notifications";
+        alert("Could not enable notifications. Please try again.");
+      }
+    }
+
+    document.getElementById("enable-push").addEventListener("click", registerPush);
+  </script>
+</body>
+</html>

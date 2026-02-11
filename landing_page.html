@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B20X | Redefine Fashion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-ivory: #f6f1ea;
+            --bg-sand: #e7dbcb;
+            --ink: #1f2a38;
+            --ink-soft: #495868;
+            --accent-gold: #c48b4f;
+            --accent-deep: #8f5a2f;
+            --white: #ffffff;
+            --shadow-soft: 0 14px 40px rgba(31, 42, 56, 0.12);
+            --shadow-card: 0 18px 45px rgba(31, 42, 56, 0.18);
+            --radius-lg: 22px;
+            --radius-md: 14px;
+            --transition: 280ms ease;
+            --bg-photo: url("https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=2100&q=80");
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            color: var(--ink);
+            background:
+                linear-gradient(160deg, rgba(246, 241, 234, 0.9), rgba(231, 219, 203, 0.82)),
+                radial-gradient(circle at 14% 8%, rgba(196, 139, 79, 0.25) 0, rgba(196, 139, 79, 0) 44%),
+                radial-gradient(circle at 88% 14%, rgba(143, 90, 47, 0.2) 0, rgba(143, 90, 47, 0) 36%),
+                var(--bg-photo) center / cover fixed no-repeat;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .page-shell {
+            position: relative;
+            min-height: 100vh;
+            isolation: isolate;
+        }
+
+        .decor-blob {
+            position: fixed;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            filter: blur(12px);
+            z-index: -1;
+            animation: floatBlob 14s ease-in-out infinite;
+        }
+
+        .decor-blob.one {
+            top: -90px;
+            left: -80px;
+            background: radial-gradient(circle at 30% 30%, rgba(196, 139, 79, 0.45), rgba(196, 139, 79, 0.05));
+        }
+
+        .decor-blob.two {
+            right: -90px;
+            bottom: 10%;
+            background: radial-gradient(circle at 66% 60%, rgba(31, 42, 56, 0.26), rgba(31, 42, 56, 0.04));
+            animation-delay: -4s;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(246, 241, 234, 0.72);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 20;
+            border-bottom: 1px solid rgba(31, 42, 56, 0.08);
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            font-size: 0.86rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-deep);
+        }
+
+        .btn-signup {
+            padding: 0.6rem 1.35rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-deep));
+            color: var(--white) !important;
+            transition: var(--transition);
+            box-shadow: 0 8px 22px rgba(143, 90, 47, 0.34);
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .hero {
+            min-height: 100vh;
+            padding: 8rem 5% 4rem;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            align-items: center;
+            gap: 2.2rem;
+            position: relative;
+        }
+
+        .hero-copy {
+            max-width: 660px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+            color: var(--accent-deep);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(143, 90, 47, 0.2);
+            padding: 0.45rem 0.95rem;
+            border-radius: 999px;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6.1vw, 5rem);
+            line-height: 0.95;
+            margin-bottom: 1.1rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent-deep);
+        }
+
+        .hero p {
+            max-width: 56ch;
+            font-size: clamp(1rem, 1.5vw, 1.18rem);
+            line-height: 1.65;
+            color: var(--ink-soft);
+            margin-bottom: 1.8rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.95rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .hero-actions-mobile {
+            display: none;
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.9rem 1.35rem;
+            border-radius: 999px;
+            transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+
+        .btn.primary {
+            color: var(--white);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-deep));
+            box-shadow: 0 14px 28px rgba(143, 90, 47, 0.34);
+        }
+
+        .btn.secondary {
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.66);
+            border: 1px solid rgba(31, 42, 56, 0.14);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+        }
+
+        .metric {
+            background: rgba(255, 255, 255, 0.64);
+            border: 1px solid rgba(31, 42, 56, 0.12);
+            border-radius: 999px;
+            padding: 0.55rem 0.85rem;
+            color: var(--ink-soft);
+            font-size: 0.82rem;
+            letter-spacing: 0.04em;
+        }
+
+        .hero-visual {
+            position: relative;
+            min-height: 550px;
+            display: grid;
+            place-items: center;
+        }
+
+        .photo-stack {
+            position: relative;
+            width: min(88%, 470px);
+            aspect-ratio: 4 / 5;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .photo-stack img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: subtleZoom 11s ease-in-out infinite alternate;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(31, 42, 56, 0.1);
+            backdrop-filter: blur(6px);
+            box-shadow: var(--shadow-soft);
+            border-radius: var(--radius-md);
+            padding: 0.85rem 1rem;
+            min-width: 170px;
+            animation: bob 4.2s ease-in-out infinite;
+        }
+
+        .floating-card strong {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.35rem;
+            color: var(--accent-deep);
+        }
+
+        .floating-card span {
+            font-size: 0.8rem;
+            letter-spacing: 0.06em;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+        }
+
+        .floating-card.one {
+            top: 10%;
+            right: -2%;
+        }
+
+        .floating-card.two {
+            bottom: 8%;
+            left: -7%;
+            animation-delay: -1.4s;
+        }
+
+        .categories {
+            padding: 3rem 5% 5rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.2rem;
+        }
+
+        .section-title h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            line-height: 1;
+            margin-bottom: 0.6rem;
+        }
+
+        .section-title p {
+            color: var(--ink-soft);
+            max-width: 58ch;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .card {
+            position: relative;
+            min-height: 430px;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            cursor: default;
+            transform: translateY(24px);
+            opacity: 0;
+            transition: transform 0.9s cubic-bezier(0.2, 0.65, 0.2, 1), opacity 0.75s ease;
+        }
+
+        .card.revealed {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(31, 42, 56, 0.03), rgba(31, 42, 56, 0.52));
+            transition: opacity var(--transition);
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 700ms ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.08);
+        }
+
+        .card:hover::after {
+            opacity: 0.85;
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2;
+            padding: 1.3rem 1.2rem;
+            color: var(--white);
+            text-align: left;
+            transform: translateY(14px);
+            opacity: 0.9;
+            transition: transform 500ms ease, opacity 500ms ease;
+        }
+
+        .card:hover .card-overlay {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .card-overlay h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .card-overlay p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .site-footer {
+            margin: 1rem 5% 2rem;
+            background:
+                linear-gradient(145deg, rgba(31, 42, 56, 0.96), rgba(23, 33, 46, 0.96)),
+                radial-gradient(circle at 80% -10%, rgba(196, 139, 79, 0.28), rgba(196, 139, 79, 0));
+            color: var(--white);
+            padding: 2rem 1.4rem 1.1rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .site-footer::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(196, 139, 79, 0.2), rgba(196, 139, 79, 0));
+            top: -130px;
+            right: -70px;
+            pointer-events: none;
+        }
+
+        .footer-top {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr;
+            gap: 1.2rem;
+            align-items: start;
+            padding-bottom: 1.3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            letter-spacing: 0.16em;
+            margin-bottom: 0.4rem;
+        }
+
+        .footer-lead {
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.65;
+            max-width: 34ch;
+            font-size: 0.95rem;
+        }
+
+        .footer-block h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.65rem;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.92);
+            transition: color var(--transition), transform var(--transition);
+            width: fit-content;
+        }
+
+        .footer-links a:hover {
+            color: #f2c699;
+            transform: translateX(2px);
+        }
+
+        .footer-bottom {
+            padding-top: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-copy,
+        .hero-visual {
+            animation: riseIn 900ms ease both;
+        }
+
+        .hero-visual {
+            animation-delay: 120ms;
+        }
+
+        @keyframes riseIn {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -14px) scale(1.06); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        @keyframes subtleZoom {
+            0% { transform: scale(1.02); }
+            100% { transform: scale(1.09); }
+        }
+
+        @keyframes bob {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0); }
+        }
+
+        @media screen and (max-width: 768px) {
+            nav {
+                position: static;
+                padding: 0.85rem 4%;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                background: rgba(246, 241, 234, 0.84);
+            }
+
+            .logo {
+                width: auto;
+                text-align: left;
+                font-size: 1.55rem;
+                letter-spacing: 0.12em;
+            }
+
+            .nav-links {
+                position: static;
+                width: auto;
+                display: flex;
+                justify-content: flex-end;
+                flex-wrap: nowrap;
+                gap: 0.4rem;
+                margin-left: auto;
+            }
+
+            .nav-links a {
+                font-size: 0.74rem;
+                padding: 0.42rem 0.56rem;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.64);
+                border: 1px solid rgba(31, 42, 56, 0.1);
+            }
+
+            .nav-links .btn-signup {
+                color: var(--white) !important;
+                background: linear-gradient(135deg, var(--accent-gold), var(--accent-deep));
+                border: none;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                padding-top: 1.4rem;
+                gap: 1.25rem;
+                min-height: auto;
+            }
+
+            .hero-copy {
+                text-align: center;
+                max-width: 100%;
+            }
+
+            .hero p {
+                max-width: 100%;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .hero-actions .btn {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .hero-actions {
+                display: none;
+            }
+
+            .hero-actions-mobile {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.7rem;
+                margin-top: 0.25rem;
+            }
+
+            .hero-actions-mobile .btn {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .hero-metrics {
+                display: none;
+            }
+
+            .hero-visual {
+                min-height: 330px;
+            }
+
+            .photo-stack {
+                width: min(100%, 360px);
+            }
+
+            .floating-card {
+                display: none;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                min-height: 360px;
+            }
+
+            body {
+                background-attachment: scroll;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        /* Mobile phones in "Desktop site" mode */
+        @media (pointer: coarse) and (min-width: 769px) and (max-width: 1200px) {
+            nav {
+                position: static;
+                padding: 0.95rem 4%;
+            }
+
+            .logo {
+                font-size: 1.7rem;
+                letter-spacing: 0.12em;
+            }
+
+            .nav-links {
+                gap: 0.55rem;
+            }
+
+            .nav-links a {
+                font-size: 0.78rem;
+                padding: 0.45rem 0.62rem;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.68);
+                border: 1px solid rgba(31, 42, 56, 0.1);
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                padding: 1.8rem 4% 2.2rem;
+                gap: 1.2rem;
+            }
+
+            .hero-copy {
+                text-align: center;
+                max-width: 100%;
+            }
+
+            .hero p {
+                max-width: 100%;
+            }
+
+            .hero-actions {
+                display: none;
+            }
+
+            .hero-actions-mobile {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.7rem;
+                margin-top: 0.2rem;
+            }
+
+            .hero-actions-mobile .btn {
+                width: 100%;
+                max-width: 360px;
+            }
+
+            .hero-metrics {
+                display: none;
+            }
+
+            .hero-visual {
+                min-height: 350px;
+            }
+
+            .photo-stack {
+                width: min(100%, 400px);
+            }
+
+            .floating-card {
+                display: none;
+            }
+
+            .categories {
+                padding: 2.4rem 4% 3.6rem;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: clamp(2rem, 9vw, 2.6rem);
+            }
+
+            .hero {
+                padding-left: 4%;
+                padding-right: 4%;
+            }
+
+            .categories {
+                padding: 2.1rem 4% 3.4rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .site-footer {
+                margin-left: 4%;
+                margin-right: 4%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+
+            .card {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <div class="decor-blob one"></div>
+        <div class="decor-blob two"></div>
+
+        <nav>
+            <div class="logo">B20X</div>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="/login/">Login</a></li>
+                <li><a href="/signup/" class="btn-signup">Sign Up</a></li>
+            </ul>
+        </nav>
+
+        <header class="hero" id="top">
+            <div class="hero-copy">
+                <p class="eyebrow">New Season, Refined Style</p>
+                <h1>Dress with confidence, <span>move with grace.</span></h1>
+                <p>B20X curates fashion pieces made to feel premium, expressive, and effortless for every day and every statement moment.</p>
+                <div class="hero-actions">
+                    <button class="btn primary" onclick="window.location.href='/info/'">Explore Collection</button>
+                    <button class="btn secondary" onclick="window.location.href='/signup/'">Create Account</button>
+                </div>
+                <div class="hero-metrics">
+                    <div class="metric">500+ premium styles</div>
+                    <div class="metric">Weekly curated drops</div>
+                    <div class="metric">Elegant quality fabrics</div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="photo-stack">
+                    <img src="https://images.unsplash.com/photo-1464863979621-258859e62245?auto=format&fit=crop&w=900&q=80" alt="Featured fashion model in premium outfit">
+                </div>
+                <div class="floating-card one">
+                    <strong>Fall Edit</strong>
+                    <span>Modern Heritage Looks</span>
+                </div>
+                <div class="floating-card two">
+                    <strong>New In</strong>
+                    <span>Soft tailoring collection</span>
+                </div>
+            </div>
+
+            <div class="hero-actions-mobile">
+                <button class="btn primary" onclick="window.location.href='/info/'">Explore Collection</button>
+                <button class="btn secondary" onclick="window.location.href='/signup/'">Create Account</button>
+            </div>
+        </header>
+
+        <section id="collections" class="categories">
+            <div class="section-title">
+                <h2>Curated Collections</h2>
+                <p>Find refined staples, elevated evening pieces, and statement accessories crafted to bring together timeless femininity and modern edge.</p>
+            </div>
+
+            <div class="grid-container">
+                <article class="card reveal">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80" alt="Summer dresses collection">
+                    <div class="card-overlay">
+                        <h3>Summer Dresses</h3>
+                        <p>Flowy silhouettes and airy textures for warm days.</p>
+                    </div>
+                </article>
+
+                <article class="card reveal">
+                    <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?auto=format&fit=crop&w=900&q=80" alt="Formal wear collection">
+                    <div class="card-overlay">
+                        <h3>Formal Wear</h3>
+                        <p>Polished cuts for events, dinners, and celebrations.</p>
+                    </div>
+                </article>
+
+                <article class="card reveal">
+                    <img src="https://images.unsplash.com/photo-1576053139778-7e32f2ae3cfd?auto=format&fit=crop&w=900&q=80" alt="Accessories collection">
+                    <div class="card-overlay">
+                        <h3>Accessories</h3>
+                        <p>Signature details that complete every outfit.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-top">
+                <div>
+                    <div class="footer-logo">B20X</div>
+                    <p class="footer-lead">Premium ladies fashion built around timeless cuts, confident silhouettes, and graceful daily style.</p>
+                </div>
+
+                <div class="footer-block">
+                    <h4>Explore</h4>
+                    <div class="footer-links">
+                        <a href="/signup/">Create Account</a>
+                    </div>
+                </div>
+
+                <div class="footer-block">
+                    <h4>Account</h4>
+                    <div class="footer-links">
+                        <a href="/login/">Login</a>
+                        <a href="/signup/">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; 2026 B20X. All rights reserved.</span>
+                <span>Designed for modern elegance.</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const revealItems = document.querySelectorAll(".reveal");
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("revealed");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.2 }
+        );
+
+        revealItems.forEach((item, index) => {
+            item.style.transitionDelay = `${index * 90}ms`;
+            observer.observe(item);
+        });
+
+        const blobs = document.querySelectorAll(".decor-blob");
+        window.addEventListener(
+            "scroll",
+            () => {
+                const scrollY = window.scrollY;
+                blobs.forEach((blob, index) => {
+                    const speed = index === 0 ? 0.04 : -0.03;
+                    blob.style.transform = `translate3d(0, ${scrollY * speed}px, 0)`;
+                });
+            },
+            { passive: true }
+        );
+    </script>
+</body>
+</html>

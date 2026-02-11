@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B20X | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c99558;
+            --gold-deep: #915b32;
+            --ink: #1f2a38;
+            --ink-soft: #5b6b7c;
+            --white: #ffffff;
+            --danger: #c64732;
+            --danger-bg: #fce9e6;
+            --card-bg: rgba(255, 255, 255, 0.78);
+            --stroke: rgba(31, 42, 56, 0.14);
+            --bg-photo: url("https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=2100&q=80");
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+            color: var(--ink);
+            background:
+                linear-gradient(145deg, rgba(244, 236, 226, 0.76), rgba(232, 219, 203, 0.58)),
+                radial-gradient(circle at 17% 10%, rgba(201, 149, 88, 0.3), rgba(201, 149, 88, 0) 40%),
+                radial-gradient(circle at 84% 88%, rgba(31, 42, 56, 0.24), rgba(31, 42, 56, 0) 38%),
+                var(--bg-photo) center / cover fixed no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.25rem;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(8px);
+            z-index: -1;
+            animation: drift 12s ease-in-out infinite;
+        }
+
+        .orb.one {
+            width: 280px;
+            height: 280px;
+            left: -90px;
+            top: -80px;
+            background: radial-gradient(circle at 40% 30%, rgba(201, 149, 88, 0.45), rgba(201, 149, 88, 0.06));
+        }
+
+        .orb.two {
+            width: 260px;
+            height: 260px;
+            right: -90px;
+            bottom: -70px;
+            background: radial-gradient(circle at 60% 55%, rgba(31, 42, 56, 0.32), rgba(31, 42, 56, 0.06));
+            animation-delay: -4s;
+        }
+
+        .login-container {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--stroke);
+            backdrop-filter: blur(12px);
+            padding: 2.4rem 1.7rem;
+            border-radius: 20px;
+            box-shadow: 0 24px 55px rgba(31, 42, 56, 0.24);
+            width: 100%;
+            max-width: 430px;
+            text-align: center;
+            animation: cardIn 700ms ease both;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(125deg, rgba(201, 149, 88, 0.45), rgba(255, 255, 255, 0.2), rgba(31, 42, 56, 0.3));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 149, 88, 0.22), rgba(201, 149, 88, 0));
+            pointer-events: none;
+            animation: pulse 6s ease-in-out infinite;
+        }
+
+        .sparkle.a {
+            top: -25px;
+            right: -30px;
+        }
+
+        .sparkle.b {
+            bottom: -45px;
+            left: -25px;
+            animation-delay: -2.3s;
+        }
+
+        .brand-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.95rem;
+            letter-spacing: 0.15em;
+            color: var(--gold-deep);
+            margin-bottom: 0.3rem;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--ink);
+            font-size: 2.35rem;
+            margin-bottom: 0.5rem;
+            line-height: 0.95;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--ink-soft);
+            margin-bottom: 1.55rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            gap: 0.82rem;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: -0.25rem;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            padding: 0.82rem 0.92rem;
+            border: 1px solid rgba(31, 42, 56, 0.2);
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.98rem;
+            transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(201, 149, 88, 0.16);
+            transform: translateY(-1px);
+        }
+
+        input[type="submit"] {
+            margin-top: 1rem;
+            padding: 0.88rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+            color: var(--white);
+            border: none;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 220ms ease, box-shadow 220ms ease;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            box-shadow: 0 14px 28px rgba(145, 91, 50, 0.35);
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px rgba(145, 91, 50, 0.42);
+        }
+
+        .signup-link {
+            margin-top: 1.3rem;
+            font-size: 0.92rem;
+            color: var(--ink-soft);
+        }
+
+        .signup-link a {
+            color: var(--gold-deep);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-msg {
+            color: var(--danger);
+            background-color: var(--danger-bg);
+            padding: 0.68rem 0.75rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--danger);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(22px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(16px, -12px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                background-attachment: scroll;
+            }
+
+            .login-container {
+                padding: 2rem 1.2rem;
+            }
+
+            h1 {
+                font-size: 1.95rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+
+    <div class="login-container">
+        <div class="sparkle a"></div>
+        <div class="sparkle b"></div>
+        <!-- Brand Logo -->
+        <span class="brand-logo">B20X</span>
+        
+        <!-- Main Heading -->
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Please login to your account</p>
+
+        <!-- Error Handling (Jinja2) -->
+        {% if error %}
+            <p class="error-msg">{{ error }}</p>
+        {% endif %}
+
+        <!-- Form -->
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label for="login_email">Email</label>
+            <input type="email" id="login_email" name="login_email" placeholder="you@example.com" required>
+
+            <label for="login_password">Password</label>
+            <input type="password" id="login_password" name="login_password" placeholder="Enter your password" required>
+
+            <input type="submit" value="Login">
+        </form>
+
+        <!-- Link to Signup Page -->
+        <p class="signup-link">
+            Don't have an account? <a href="/signup/">Sign up here</a>
+        </p>
+    </div>
+
+</body>
+</html>

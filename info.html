@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B20X | Info</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1e2a3a;
+      --ink-soft: #5b6b7d;
+      --gold: #ca935b;
+      --gold-deep: #915b32;
+      --card: rgba(255, 255, 255, 0.86);
+      --line: rgba(30, 42, 58, 0.14);
+      --ok: #1d7f4d;
+      --ok-bg: #e7f6ef;
+      --danger: #c14a34;
+      --danger-bg: #fce8e4;
+      --radius-xl: 22px;
+      --radius-lg: 14px;
+      --shadow-xl: 0 20px 50px rgba(30, 42, 58, 0.2);
+      --hero-bg: url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2200&q=80");
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Outfit', sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(160deg, rgba(246, 238, 226, 0.84), rgba(225, 212, 194, 0.74)),
+        radial-gradient(circle at 12% 10%, rgba(202, 147, 91, 0.2), rgba(202, 147, 91, 0) 38%),
+        radial-gradient(circle at 86% 84%, rgba(30, 42, 58, 0.2), rgba(30, 42, 58, 0) 42%),
+        var(--hero-bg) center / cover fixed no-repeat;
+      padding: 1.2rem;
+    }
+
+    .page { max-width: 1300px; margin: 0 auto; display: grid; gap: 1rem; }
+
+    .hero, .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero { padding: 1.4rem 1.2rem; }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 0.95;
+      margin-bottom: 0.35rem;
+    }
+
+    .subtitle {
+      color: var(--ink-soft);
+      margin-bottom: 0.95rem;
+      line-height: 1.7;
+      max-width: 72ch;
+    }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+
+    .actions a {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 0.52rem 0.78rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(30,42,58,0.14);
+      color: var(--ink);
+      transition: transform 200ms ease, border-color 200ms ease;
+    }
+
+    .actions a:hover { transform: translateY(-2px); border-color: rgba(202,147,91,0.55); }
+
+    .message, .error {
+      margin-top: 0.9rem;
+      border-radius: 10px;
+      padding: 0.68rem 0.78rem;
+      font-size: 0.92rem;
+      border-left: 4px solid;
+    }
+
+    .message { color: var(--ok); background: var(--ok-bg); border-color: var(--ok); }
+    .error { color: var(--danger); background: var(--danger-bg); border-color: var(--danger); }
+
+    pre.error-detail {
+      margin-top: 0.7rem;
+      background: rgba(30,42,58,0.08);
+      border: 1px solid rgba(30,42,58,0.14);
+      border-radius: 10px;
+      padding: 0.75rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      color: #9f1f10;
+    }
+
+    .add-new {
+      margin-top: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .panel { padding: 1rem; }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+
+    .panel-head h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+    }
+
+    .count {
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      border: 1px solid rgba(30,42,58,0.14);
+      border-radius: 999px;
+      padding: 0.4rem 0.7rem;
+      background: rgba(255,255,255,0.74);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid rgba(30,42,58,0.1);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.84);
+    }
+
+    .admin-mobile { display: none; }
+
+    .admin-mobile-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .admin-mobile-card {
+      border: 1px solid rgba(30,42,58,0.14);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.84);
+      padding: 0.85rem;
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .admin-mobile-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .admin-mobile-meta {
+      color: var(--ink-soft);
+      font-size: 0.86rem;
+    }
+
+    .admin-mobile-block {
+      border: 1px solid rgba(30,42,58,0.1);
+      border-radius: 10px;
+      padding: 0.65rem;
+      background: rgba(255,255,255,0.74);
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .admin-mobile-block h4 {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .admin-mobile-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    table { width: 100%; border-collapse: collapse; min-width: 1180px; }
+
+    thead th {
+      text-align: left;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      padding: 0.75rem;
+      background: rgba(248,244,238,0.95);
+      border-bottom: 1px solid rgba(30,42,58,0.12);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody td {
+      padding: 0.72rem;
+      border-bottom: 1px solid rgba(30,42,58,0.08);
+      vertical-align: top;
+      font-size: 0.92rem;
+    }
+
+    .image-list {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .image-item {
+      display: flex;
+      gap: 0.55rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(30,42,58,0.12);
+      border-radius: 10px;
+      padding: 0.45rem;
+    }
+
+    .image-thumb {
+      max-width: 110px;
+      border-radius: 8px;
+      border: 1px solid rgba(30,42,58,0.12);
+    }
+
+    .extra-fields { display: grid; gap: 0.45rem; }
+
+    .extra-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 0.4rem;
+      align-items: start;
+    }
+
+    input[type="text"], input[type="file"] {
+      width: 100%;
+      border: 1px solid rgba(30,42,58,0.18);
+      border-radius: 10px;
+      padding: 0.52rem 0.6rem;
+      font: inherit;
+      color: var(--ink);
+      background: rgba(255,255,255,0.9);
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(202,147,91,0.16);
+    }
+
+    button {
+      border: 1px solid rgba(30,42,58,0.14);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.84);
+      color: var(--ink);
+      padding: 0.42rem 0.7rem;
+      font: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: transform 180ms ease, border-color 180ms ease;
+      white-space: nowrap;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: rgba(202,147,91,0.52); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+      color: #fff;
+      border: none;
+    }
+
+    .btn-danger {
+      color: #b24734;
+      border-color: rgba(178,71,52,0.35);
+      background: rgba(252,232,228,0.7);
+    }
+
+    .user-cards {
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .info-card {
+      border: 1px solid rgba(30,42,58,0.14);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.84);
+      padding: 0.9rem;
+      display: grid;
+      gap: 0.55rem;
+      align-content: start;
+    }
+
+    .info-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+    }
+
+    .info-card p { color: var(--ink-soft); line-height: 1.65; }
+
+    .info-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.55rem;
+    }
+
+    .info-images img {
+      width: 100%;
+      max-width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(30,42,58,0.12);
+    }
+
+    .info-extra {
+      list-style: none;
+      display: grid;
+      gap: 0.24rem;
+      color: var(--ink-soft);
+      padding-left: 0;
+    }
+
+    .empty { color: var(--ink-soft); font-style: italic; }
+
+    @media (max-width: 1000px) {
+      body { background-attachment: scroll; }
+      .hero, .panel { border-radius: 18px; }
+      .admin-desktop { display: none; }
+      .admin-mobile { display: block; }
+      .user-cards {
+        grid-template-columns: 1fr;
+      }
+      .info-images {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>Info Management</h1>
+      <p class="subtitle">Publish and maintain your information rows, images, and custom fields from one place.</p>
+
+      {% if is_admin %}
+        <div class="actions">
+          <a href="/admin/">Admin</a>
+          <a href="/update_details/">Update Users</a>
+          <a href="/users_details/">Users List</a>
+          <a href="/info/">Manage Info</a>
+          <a href="/feedbacks/">View Feedback</a>
+          <a href="/logout/">Logout</a>
+        </div>
+      {% endif %}
+
+      {% if not logged_in %}
+        <div class="actions" style="margin-top: 0.7rem;">
+          <a href="/">Sign up</a>
+          <a href="/login/">Login</a>
+        </div>
+      {% else %}
+        <div class="actions" style="margin-top: 0.7rem;">
+          <a href="/user/">User Home</a>
+          <a href="/info/">Info</a>
+          <a href="/logout/">Logout</a>
+        </div>
+      {% endif %}
+
+      {% if message %}
+        <p class="message">{{ message }}</p>
+      {% endif %}
+      {% if error %}
+        <p class="error">{{ error }}</p>
+      {% endif %}
+      {% if is_admin and error_detail %}
+        <pre class="error-detail">{{ error_detail }}</pre>
+      {% endif %}
+
+      {% if is_admin %}
+        <div class="add-new">
+          <strong>Add New Row:</strong>
+          <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <input type="hidden" name="action" value="add_empty" />
+            <button class="btn-primary" type="submit">Add Empty Row</button>
+          </form>
+        </div>
+      {% endif %}
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>All Info</h2>
+        <div class="count">Total: {{ info_rows|length }}</div>
+      </div>
+
+      {% if is_admin %}
+        <div class="admin-desktop">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Content</th>
+                  <th>Image</th>
+                  <th>Extra</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in info_rows %}
+                  <tr>
+                    <td>
+                      <input type="text" name="title" value="{{ row.title }}" form="info-form-{{ row.id }}" />
+                    </td>
+                    <td>
+                      <input type="text" name="content" value="{{ row.content }}" form="info-form-{{ row.id }}" />
+                    </td>
+                    <td>
+                      {% if row.image_urls %}
+                        <div class="image-list">
+                          {% for url in row.image_urls %}
+                            <div class="image-item">
+                              {% if url.url %}
+                                <img class="image-thumb" src="{{ url.url }}" alt="image" />
+                              {% else %}
+                                <img class="image-thumb" src="{{ url }}" alt="image" />
+                              {% endif %}
+                              <form method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                                <input type="hidden" name="action" value="remove_image" />
+                                <input type="hidden" name="info_id" value="{{ row.id }}" />
+                                {% if url.url %}
+                                  <input type="hidden" name="image_url" value="{{ url.url }}" />
+                                  <input type="hidden" name="image_path" value="{{ url.path }}" />
+                                {% else %}
+                                  <input type="hidden" name="image_url" value="{{ url }}" />
+                                {% endif %}
+                                <button class="btn-danger" type="submit">Delete</button>
+                              </form>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                      <div style="margin-top: 0.45rem;">
+                        <input type="file" name="images" multiple form="info-form-{{ row.id }}" />
+                      </div>
+                    </td>
+                    <td>
+                      <div class="extra-fields" data-fields data-form-id="info-form-{{ row.id }}">
+                        {% if row.extra %}
+                          {% for k, v in row.extra.items() %}
+                            <div class="extra-row">
+                              <input type="text" name="extra_key" value="{{ k }}" form="info-form-{{ row.id }}" />
+                              <input type="text" name="extra_value" value="{{ v }}" form="info-form-{{ row.id }}" />
+                              <form method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                                <input type="hidden" name="action" value="remove_extra" />
+                                <input type="hidden" name="info_id" value="{{ row.id }}" />
+                                <input type="hidden" name="remove_key" value="{{ k }}" />
+                                <button class="btn-danger" type="submit">Delete</button>
+                              </form>
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          <div class="extra-row">
+                            <input type="text" name="extra_key" placeholder="Field name" form="info-form-{{ row.id }}" />
+                            <input type="text" name="extra_value" placeholder="Field value" form="info-form-{{ row.id }}" />
+                            <span></span>
+                          </div>
+                        {% endif %}
+                      </div>
+                      <button type="button" onclick="addExtraField(this)">Add Field</button>
+                    </td>
+                    <td>
+                      <button class="btn-primary" type="submit" form="info-form-{{ row.id }}">Save</button>
+                    </td>
+                    <td>
+                    <form method="POST">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                      <input type="hidden" name="action" value="delete" />
+                      <input type="hidden" name="info_id" value="{{ row.id }}" />
+                      <button class="btn-danger" type="submit">Delete</button>
+                    </form>
+                    </td>
+                    <td style="display:none;">
+                    <form id="info-form-{{ row.id }}" method="POST" enctype="multipart/form-data">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                      <input type="hidden" name="action" value="update" />
+                      <input type="hidden" name="info_id" value="{{ row.id }}" />
+                    </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-mobile">
+          <div class="admin-mobile-list">
+            {% for row in info_rows %}
+              <article class="admin-mobile-card">
+                <h3>{{ row.title or "Untitled Row" }}</h3>
+                <p class="admin-mobile-meta">Row ID: {{ row.id }}</p>
+
+                <form id="info-form-mobile-{{ row.id }}" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                  <input type="hidden" name="action" value="update" />
+                  <input type="hidden" name="info_id" value="{{ row.id }}" />
+
+                  <div class="admin-mobile-block">
+                    <h4>Basic Details</h4>
+                    <input type="text" name="title" value="{{ row.title }}" placeholder="Title" />
+                    <input type="text" name="content" value="{{ row.content }}" placeholder="Content" />
+                  </div>
+
+                  <div class="admin-mobile-block">
+                    <h4>Upload Images</h4>
+                    <input type="file" name="images" multiple />
+                  </div>
+
+                  <div class="admin-mobile-block">
+                    <h4>Extra Fields</h4>
+                    <div class="extra-fields" data-fields data-form-id="info-form-mobile-{{ row.id }}">
+                      {% if row.extra %}
+                        {% for k, v in row.extra.items() %}
+                          <div class="extra-row">
+                            <input type="text" name="extra_key" value="{{ k }}" />
+                            <input type="text" name="extra_value" value="{{ v }}" />
+                            <span></span>
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        <div class="extra-row">
+                          <input type="text" name="extra_key" placeholder="Field name" />
+                          <input type="text" name="extra_value" placeholder="Field value" />
+                          <span></span>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <div class="admin-mobile-actions">
+                      <button type="button" onclick="addExtraField(this)">Add Field</button>
+                      <button class="btn-primary" type="submit">Save Changes</button>
+                    </div>
+                  </div>
+                </form>
+
+                {% if row.image_urls %}
+                  <div class="admin-mobile-block">
+                    <h4>Current Images</h4>
+                    <div class="image-list">
+                      {% for url in row.image_urls %}
+                        <div class="image-item">
+                          {% if url.url %}
+                            <img class="image-thumb" src="{{ url.url }}" alt="image" />
+                          {% else %}
+                            <img class="image-thumb" src="{{ url }}" alt="image" />
+                          {% endif %}
+                          <form method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                            <input type="hidden" name="action" value="remove_image" />
+                            <input type="hidden" name="info_id" value="{{ row.id }}" />
+                            {% if url.url %}
+                              <input type="hidden" name="image_url" value="{{ url.url }}" />
+                              <input type="hidden" name="image_path" value="{{ url.path }}" />
+                            {% else %}
+                              <input type="hidden" name="image_url" value="{{ url }}" />
+                            {% endif %}
+                            <button class="btn-danger" type="submit">Delete Image</button>
+                          </form>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endif %}
+
+                {% if row.extra %}
+                  <div class="admin-mobile-block">
+                    <h4>Remove Extra Field</h4>
+                    <div class="admin-mobile-actions">
+                      {% for k, v in row.extra.items() %}
+                        <form method="POST">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                          <input type="hidden" name="action" value="remove_extra" />
+                          <input type="hidden" name="info_id" value="{{ row.id }}" />
+                          <input type="hidden" name="remove_key" value="{{ k }}" />
+                          <button class="btn-danger" type="submit">Delete {{ k }}</button>
+                        </form>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endif %}
+
+                <div class="admin-mobile-actions">
+                  <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+                    <input type="hidden" name="action" value="delete" />
+                    <input type="hidden" name="info_id" value="{{ row.id }}" />
+                    <button class="btn-danger" type="submit">Delete Row</button>
+                  </form>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        {% if info_rows %}
+          <div class="user-cards">
+            {% for row in info_rows %}
+              <article class="info-card">
+                <h3>{{ row.title or "Untitled" }}</h3>
+                <p>{{ row.content }}</p>
+
+                {% if row.image_urls %}
+                  <div class="info-images">
+                    {% for url in row.image_urls %}
+                      {% if url.url %}
+                        <img src="{{ url.url }}" alt="image" />
+                      {% else %}
+                        <img src="{{ url }}" alt="image" />
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                {% if row.extra %}
+                  <ul class="info-extra">
+                    {% for k, v in row.extra.items() %}
+                      <li><strong>{{ k }}:</strong> {{ v }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="empty">No info available yet.</p>
+        {% endif %}
+      {% endif %}
+    </section>
+  </main>
+
+  <script>
+    function addExtraField(button) {
+      const block = button.closest(".admin-mobile-block") || button.parentElement;
+      const container = block.querySelector("[data-fields]");
+      if (!container) return;
+      const formId = container.getAttribute("data-form-id");
+      const row = document.createElement("div");
+      row.className = "extra-row";
+
+      const keyInput =
+        '<input type="text" name="extra_key" placeholder="Field name"' +
+        (formId ? ' form="' + formId + '"' : "") +
+        " />";
+      const valueInput =
+        '<input type="text" name="extra_value" placeholder="Field value"' +
+        (formId ? ' form="' + formId + '"' : "") +
+        " />";
+
+      row.innerHTML = keyInput + valueInput + "<span></span>";
+      container.appendChild(row);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>B20X | Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1e2a3a;
+            --ink-soft: #5b6b7d;
+            --gold: #ca935b;
+            --gold-deep: #915b32;
+            --card: rgba(255, 255, 255, 0.84);
+            --line: rgba(30, 42, 58, 0.14);
+            --white: #ffffff;
+            --shadow-xl: 0 22px 55px rgba(30, 42, 58, 0.22);
+            --shadow-md: 0 10px 28px rgba(30, 42, 58, 0.16);
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --sidebar-width: 290px;
+            --sidebar-collapsed: 84px;
+            --hero-bg: url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2200&q=80");
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+            color: var(--ink);
+            background:
+                linear-gradient(160deg, rgba(246, 238, 226, 0.8), rgba(225, 212, 194, 0.75)),
+                radial-gradient(circle at 8% 15%, rgba(202, 147, 91, 0.22), rgba(202, 147, 91, 0) 35%),
+                radial-gradient(circle at 88% 82%, rgba(30, 42, 58, 0.25), rgba(30, 42, 58, 0) 40%),
+                var(--hero-bg) center / cover fixed no-repeat;
+            overflow-x: hidden;
+        }
+
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(8px);
+            z-index: -1;
+            animation: drift 12s ease-in-out infinite;
+        }
+
+        .bg-orb.one {
+            width: 340px;
+            height: 340px;
+            top: -90px;
+            left: -100px;
+            background: radial-gradient(circle at 35% 35%, rgba(202, 147, 91, 0.45), rgba(202, 147, 91, 0.08));
+        }
+
+        .bg-orb.two {
+            width: 290px;
+            height: 290px;
+            bottom: -110px;
+            right: -90px;
+            background: radial-gradient(circle at 60% 60%, rgba(30, 42, 58, 0.34), rgba(30, 42, 58, 0.08));
+            animation-delay: -5s;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 18, 24, 0.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 260ms ease;
+            z-index: 35;
+            backdrop-filter: blur(2px);
+        }
+
+        .overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: var(--sidebar-width);
+            background:
+                linear-gradient(160deg, rgba(29, 39, 53, 0.96), rgba(24, 33, 46, 0.96)),
+                radial-gradient(circle at 85% 6%, rgba(202, 147, 91, 0.26), rgba(202, 147, 91, 0));
+            z-index: 40;
+            box-shadow: 8px 0 26px rgba(0, 0, 0, 0.28);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(6px);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            transition: width 280ms ease, transform 300ms ease;
+        }
+
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--white);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.45rem;
+            letter-spacing: 0.08em;
+            padding: 0.3rem 0.5rem 0.95rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .drawer-brand {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 220ms ease;
+        }
+
+        .closebtn,
+        .collapse-btn {
+            border: none;
+            background: transparent;
+            color: #f5d4b2;
+            font-size: 1.6rem;
+            cursor: pointer;
+            line-height: 1;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+        }
+
+        .collapse-btn:hover,
+        .closebtn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .closebtn {
+            display: none;
+        }
+
+        .drawer-nav {
+            display: grid;
+            gap: 0.45rem;
+            margin-top: 0.2rem;
+        }
+
+        .drawer a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 0.74rem 0.8rem;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .drawer a:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(202, 147, 91, 0.5);
+            transform: translateX(3px);
+        }
+
+        .nav-icon {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+        }
+
+        .nav-icon svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            fill: none;
+        }
+
+        .nav-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: opacity 220ms ease;
+        }
+
+        .logout-link {
+            margin-top: 0.4rem;
+            color: #ffb4a8 !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+            padding-top: 1rem !important;
+            border-radius: 0 !important;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.95rem 2rem;
+            border-bottom: 1px solid rgba(30, 42, 58, 0.1);
+            background: rgba(246, 238, 226, 0.72);
+            backdrop-filter: blur(10px);
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            transition: margin-left 280ms ease, width 280ms ease;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .menu-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 0.56rem 0.82rem;
+            font-family: inherit;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+            box-shadow: 0 12px 24px rgba(145, 91, 50, 0.3);
+            cursor: pointer;
+            transition: transform 220ms ease;
+            display: none;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .menu-icon {
+            width: 18px;
+            height: 12px;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-icon span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--white);
+            border-radius: 999px;
+            transition: transform 220ms ease, opacity 220ms ease;
+            transform-origin: center;
+        }
+
+        .menu-btn.active .menu-icon span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+        .menu-btn.active .menu-icon span:nth-child(2) { opacity: 0; }
+        .menu-btn.active .menu-icon span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+
+        .brand-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.5rem, 3.2vw, 2rem);
+            letter-spacing: 0.09em;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .status-pill {
+            border-radius: 999px;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.48rem 0.75rem;
+            color: #186a3b;
+            background: rgba(37, 188, 108, 0.12);
+            border: 1px solid rgba(24, 106, 59, 0.24);
+        }
+
+        #enable-push {
+            border: 1px solid rgba(30, 42, 58, 0.14);
+            border-radius: 999px;
+            padding: 0.58rem 0.95rem;
+            font-family: inherit;
+            font-weight: 600;
+            background: var(--card);
+            color: var(--ink);
+            cursor: pointer;
+            transition: transform 220ms ease, border-color 220ms ease;
+        }
+
+        #enable-push:hover {
+            border-color: rgba(202, 147, 91, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 1.5rem 2rem 2.4rem;
+            transition: margin-left 280ms ease, width 280ms ease;
+        }
+
+        .hero {
+            border-radius: var(--radius-xl);
+            padding: 2rem 1.6rem;
+            background:
+                linear-gradient(155deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.55)),
+                linear-gradient(135deg, rgba(202, 147, 91, 0.18), rgba(30, 42, 58, 0.08));
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow-xl);
+            animation: riseIn 700ms ease both;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 0.55rem;
+            line-height: 0.95;
+        }
+
+        .hero p {
+            color: var(--ink-soft);
+            line-height: 1.7;
+            max-width: 75ch;
+            margin-bottom: 1.2rem;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+        }
+
+        .quick-actions a {
+            text-decoration: none;
+            border-radius: 999px;
+            padding: 0.65rem 0.95rem;
+            font-size: 0.82rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid rgba(30, 42, 58, 0.15);
+            background: rgba(255, 255, 255, 0.74);
+            color: var(--ink);
+            transition: transform 220ms ease, border-color 220ms ease;
+        }
+
+        .quick-actions a:hover {
+            transform: translateY(-2px);
+            border-color: rgba(202, 147, 91, 0.55);
+        }
+
+        .section-title {
+            margin: 1.6rem 0 0.75rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 1.2rem;
+        }
+
+        .panel h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.55rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .panel p {
+            color: var(--ink-soft);
+            line-height: 1.68;
+            margin-bottom: 0.85rem;
+        }
+
+        .action-list {
+            display: grid;
+            gap: 0.55rem;
+        }
+
+        .action-list a {
+            text-decoration: none;
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(30, 42, 58, 0.12);
+            border-radius: 12px;
+            padding: 0.72rem 0.8rem;
+            transition: border-color 220ms ease, transform 220ms ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .action-list a:hover {
+            border-color: rgba(202, 147, 91, 0.5);
+            transform: translateX(2px);
+        }
+
+        .action-list .arrow {
+            color: var(--gold-deep);
+            font-weight: 600;
+        }
+
+        .footer-note {
+            margin-top: 1.15rem;
+            font-size: 0.86rem;
+            color: var(--ink-soft);
+        }
+
+        body.sidebar-collapsed .drawer {
+            width: var(--sidebar-collapsed);
+            padding-left: 0.55rem;
+            padding-right: 0.55rem;
+        }
+
+        body.sidebar-collapsed .drawer-brand,
+        body.sidebar-collapsed .nav-text {
+            opacity: 0;
+            pointer-events: none;
+            width: 0;
+        }
+
+        body.sidebar-collapsed header,
+        body.sidebar-collapsed .container {
+            margin-left: var(--sidebar-collapsed);
+            width: calc(100% - var(--sidebar-collapsed));
+        }
+
+        @keyframes riseIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(16px, -10px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @media (max-width: 991px) {
+            .drawer {
+                transform: translateX(-102%);
+                width: min(86vw, 340px);
+                padding: 1rem;
+            }
+
+            .drawer.open {
+                transform: translateX(0);
+            }
+
+            .closebtn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .collapse-btn {
+                display: none;
+            }
+
+            header,
+            .container,
+            body.sidebar-collapsed header,
+            body.sidebar-collapsed .container {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            header {
+                padding: 0.85rem 4%;
+            }
+
+            .container {
+                padding: 1.25rem 4% 2rem;
+            }
+
+            .menu-btn {
+                display: inline-flex;
+            }
+
+            .status-pill {
+                display: none;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                background-attachment: scroll;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-orb one"></div>
+    <div class="bg-orb two"></div>
+
+    <aside id="drawer" class="drawer" aria-label="Admin navigation">
+        <div class="drawer-header">
+            <span class="drawer-brand">Admin Panel</span>
+            <button id="collapse-btn" class="collapse-btn" type="button" aria-label="Collapse sidebar">&#9664;</button>
+            <button class="closebtn" type="button" aria-label="Close menu" onclick="closeDrawer()">x</button>
+        </div>
+
+        <nav class="drawer-nav">
+            <a href="/admin/">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></span>
+                <span class="nav-text">Dashboard Home</span>
+            </a>
+            <a href="/update_details/">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h6"/><path d="m4 16 10.5-10.5a2.1 2.1 0 1 1 3 3L7 19H4z"/></svg></span>
+                <span class="nav-text">Update User Details</span>
+            </a>
+            <a href="/users_details/">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.8 19a5.6 5.6 0 0 1 10.4 0"/><path d="M16.5 10.5a2.6 2.6 0 1 0 0-5.2"/><path d="M17 13.6a4.7 4.7 0 0 1 3.2 3.9"/></svg></span>
+                <span class="nav-text">Users Directory</span>
+            </a>
+            <a href="/info/">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M5 7h14"/><path d="M5 17h14"/><rect x="5" y="4" width="14" height="16" rx="2"/></svg></span>
+                <span class="nav-text">Manage Info Content</span>
+            </a>
+            <a href="/feedbacks/">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v10H8l-4 4z"/><path d="M8 9h8"/><path d="M8 12h6"/></svg></span>
+                <span class="nav-text">Feedback Inbox</span>
+            </a>
+            <a class="logout-link" href="/logout/">
+                <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></span>
+                <span class="nav-text">Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <div id="overlay" class="overlay" onclick="closeDrawer()"></div>
+
+    <header>
+        <div class="header-left">
+            <button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" onclick="openDrawer()">
+                <span class="menu-icon" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+                <span>Menu</span>
+            </button>
+            <span class="brand-title">B20X Admin</span>
+        </div>
+
+        <div class="top-actions">
+            <span class="status-pill">System online</span>
+            <button id="enable-push" type="button">Enable Notifications</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Welcome Back, Admin</h1>
+            <p>Manage users, update storefront information, review feedback, and keep notifications enabled so you never miss new activity.</p>
+            <div class="quick-actions">
+                <a href="/users_details/">Users</a>
+                <a href="/update_details/">Update Details</a>
+                <a href="/info/">Info Management</a>
+                <a href="/feedbacks/">Feedbacks</a>
+                <a href="/logout/">Logout</a>
+            </div>
+        </section>
+
+        <h2 class="section-title">Admin Workspace</h2>
+        <section class="content-grid">
+            <article class="panel">
+                <h3>Core Management</h3>
+                <p>Use these primary routes to maintain users, content, and access control without jumping through multiple small widgets.</p>
+                <div class="action-list">
+                    <a href="/users_details/"><span>Users Directory</span><span class="arrow">Open</span></a>
+                    <a href="/update_details/"><span>Update User Details</span><span class="arrow">Open</span></a>
+                    <a href="/logout/"><span>Logout Session</span><span class="arrow">Exit</span></a>
+                </div>
+            </article>
+
+            <article class="panel">
+                <h3>Content and Feedback</h3>
+                <p>Publish updates through Info Management and monitor user responses from the feedback inbox in a single clear section.</p>
+                <div class="action-list">
+                    <a href="/info/"><span>Manage Info Content</span><span class="arrow">Open</span></a>
+                    <a href="/feedbacks/"><span>Feedback Inbox</span><span class="arrow">Open</span></a>
+                    <a href="/admin/"><span>Refresh Dashboard</span><span class="arrow">Open</span></a>
+                </div>
+            </article>
+        </section>
+
+        <p class="footer-note">Tip: enable notifications above to receive push updates when new feedback arrives.</p>
+    </main>
+
+    <script>
+        const drawer = document.getElementById("drawer");
+        const overlay = document.getElementById("overlay");
+        const menuBtn = document.getElementById("menu-btn");
+        const collapseBtn = document.getElementById("collapse-btn");
+        const desktopQuery = window.matchMedia("(min-width: 992px)");
+
+        function openDrawer() {
+            if (desktopQuery.matches) {
+                return;
+            }
+            drawer.classList.add("open");
+            overlay.classList.add("show");
+            menuBtn.classList.add("active");
+            menuBtn.setAttribute("aria-expanded", "true");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeDrawer() {
+            drawer.classList.remove("open");
+            overlay.classList.remove("show");
+            menuBtn.classList.remove("active");
+            menuBtn.setAttribute("aria-expanded", "false");
+            document.body.style.overflow = "";
+        }
+
+        function toggleDesktopSidebar() {
+            if (!desktopQuery.matches) {
+                return;
+            }
+            document.body.classList.toggle("sidebar-collapsed");
+            const collapsed = document.body.classList.contains("sidebar-collapsed");
+            collapseBtn.innerHTML = collapsed ? "&#9654;" : "&#9664;";
+            collapseBtn.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+        }
+
+        collapseBtn.addEventListener("click", toggleDesktopSidebar);
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeDrawer();
+            }
+        });
+
+        desktopQuery.addEventListener("change", () => {
+            closeDrawer();
+            if (!desktopQuery.matches) {
+                document.body.classList.remove("sidebar-collapsed");
+                collapseBtn.innerHTML = "&#9664;";
+            }
+        });
+    </script>
+
+    <script>
+        async function urlBase64ToUint8Array(base64String) {
+            const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+            const base64 = (base64String + padding)
+                .replace(/-/g, "+")
+                .replace(/_/g, "/");
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        async function registerPush() {
+            try {
+                if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+                    alert("Push notifications are not supported in this browser.");
+                    return;
+                }
+
+                const swReg = await navigator.serviceWorker.register("/sw.js");
+                const res = await fetch("/push/vapid_public_key");
+                const data = await res.json();
+                const publicKey = data.publicKey;
+
+                const subscription = await swReg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: await urlBase64ToUint8Array(publicKey),
+                });
+
+                await fetch("/push/subscribe", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-Token": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify(subscription),
+                });
+
+                alert("Notifications enabled.");
+            } catch (error) {
+                alert("Could not enable notifications. Please try again.");
+            }
+        }
+
+        document.getElementById("enable-push").addEventListener("click", registerPush);
+    </script>
+</body>
+</html>
